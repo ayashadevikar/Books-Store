@@ -14,7 +14,7 @@ const EditBook = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook)
+    axios.get(`${import.meta.env.VITE_API_URL}/books/${id}`)
       .then((res) => {
         const { title, author, publishYear } = res.data;
         setTitle(title);
@@ -32,7 +32,7 @@ const EditBook = () => {
   const handleEditBook = () => {
     const updatedBook = { title, author, publishYear };
     setLoading(true);
-    axios.put(`http://localhost:5555/books/${id}`, updatedBook)
+    axios.put(`import.meta.env.VITE_API_URL}/books/${id}`, updatedBook)
       .then(() => {
         enqueueSnackbar('Book updated successfully!', { variant: 'success' });
         navigate('/');
