@@ -3,11 +3,11 @@ import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import booksRoute from './routes/booksRoute.js'
 import cors from 'cors';
-import path from "path";
+
 
 const app = express();
 
-const __dirname = path.resolve();
+
 
 // Middleware for parsing request body
 app.use(express.json());
@@ -31,12 +31,7 @@ app.get('/', (request, response) => {
 
 app.use('/books', booksRoute);
 
-if(process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "/frontend/dist")));
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-	});
-}
+
 
 mongoose
    .connect(mongoDBURL)
