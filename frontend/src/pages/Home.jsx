@@ -11,7 +11,7 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     useEffect(() => {
       setLoading(true);
-      axios.get('http://localhost:5555/books')
+      axios.get(`${process.env.REACT_APP_API_URL}/api/books`,data)
         .then((res) => {
           console.log('Fetched books:', res.data);
           setBooks(res.data); // <-- Use res.data directly
