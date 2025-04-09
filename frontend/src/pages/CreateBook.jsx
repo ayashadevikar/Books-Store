@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 const CreateBook = () => {
   const [title, setTitle] = useState('');
@@ -26,8 +28,10 @@ const CreateBook = () => {
 
     setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/books`)
+      .post(`${apiUrl}/books`)
       .then(() => {
+        console.log('Fetched books:', res.data);
+        setBooks(res.data);
         enqueueSnackbar('Book created successfully!', { variant: 'success' });
         navigate('/');
       })
