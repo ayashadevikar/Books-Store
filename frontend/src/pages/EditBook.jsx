@@ -32,7 +32,7 @@ const EditBook = () => {
   const handleEditBook = () => {
     const updatedBook = { title, author, publishYear };
     setLoading(true);
-    axios.put(`import.meta.env.VITE_API_URL}/books/${id}`, updatedBook)
+    axios.put(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook)
       .then(() => {
         enqueueSnackbar('Book updated successfully!', { variant: 'success' });
         navigate('/');
@@ -43,6 +43,7 @@ const EditBook = () => {
         setLoading(false);
       });
   };
+  
 
   return (
     <div className="container mt-4">

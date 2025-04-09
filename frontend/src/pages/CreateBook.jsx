@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-const apiUrl = import.meta.env.VITE_API_URL;
+
 
 
 const CreateBook = () => {
@@ -19,19 +19,17 @@ const CreateBook = () => {
       enqueueSnackbar('Please fill all fields', { variant: 'warning' });
       return;
     }
-
+  
     const data = {
       title,
       author,
       publishYear: Number(publishYear),
     };
-
+  
     setLoading(true);
     axios
-      .post(`${apiUrl}/books`)
+      .post(`${import.meta.env.VITE_API_URL}/books`, data)
       .then(() => {
-        console.log('Fetched books:', res.data);
-        setBooks(res.data);
         enqueueSnackbar('Book created successfully!', { variant: 'success' });
         navigate('/');
       })
@@ -43,6 +41,8 @@ const CreateBook = () => {
         setLoading(false);
       });
   };
+  
+
 
   return (
     <div className="container mt-4">
