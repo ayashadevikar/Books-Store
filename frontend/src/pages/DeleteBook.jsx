@@ -10,9 +10,15 @@ const DeleteBook = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleDeleteBook = () => {
+    const token = localStorage.getItem('token'); // Get JWT from localStorage
+  
     setLoading(true);
     axios
-      .delete(`${import.meta.env.VITE_API_URL}/books/${id}`)
+      .delete(`${import.meta.env.VITE_API_URL}/books/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // include token in header
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar('Book deleted successfully', { variant: 'success' });
@@ -24,6 +30,7 @@ const DeleteBook = () => {
         console.error(error);
       });
   };
+  
 
   return (
     <div className="container mt-5">

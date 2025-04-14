@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 // import Spinner from '../Components/Spinner';
 import { Link } from 'react-router-dom';
-import { AiOutlineEdit } from 'react-icons/ai';
+// import { AiOutlineEdit } from 'react-icons/ai';
 import { BsInfoCircle } from 'react-icons/bs';
-import { MdOutlineAddBox , MdOutlineDelete } from 'react-icons/md';
+// import { MdOutlineAddBox , MdOutlineDelete } from 'react-icons/md';
 
 const Home = () => {
     const [books, setBooks] = useState([]);
@@ -28,12 +28,18 @@ const Home = () => {
     <>
 
   
-<div className='d-flex justify-content-between align-items-center mb-3'>
+<div className='d-flex justify-content-between align-items-center mb-3 p-2'>
         <h1>Book List</h1>
-        <Link to='/books/create' className='btn btn-primary d-flex align-items-center'>
-          <MdOutlineAddBox className='me-2' />
-          Add Book
-        </Link>
+       
+        {/* <div className='d-flex gap-3'>
+            <Link to='/books/create' className='btn btn-primary d-flex align-items-center'>
+              <MdOutlineAddBox className='me-2' />
+               Add Book
+             </Link>
+            <Link to='/login' type="button" className="btn btn-primary px-4">Login</Link>
+            <Link to='/register' type="button" className="btn btn-primary px-4">Register</Link>
+        </div> */}
+       
       </div>
 
       {loading ? (
@@ -65,12 +71,12 @@ const Home = () => {
                     <Link to={`/books/details/${book._id}`} className='btn btn-sm btn-info text-white'>
                       <BsInfoCircle />
                     </Link>
-                    <Link to={`/books/edit/${book._id}`} className='btn btn-sm btn-warning'>
+                    {/* <Link to={`/books/edit/${book._id}`} className='btn btn-sm btn-warning'>
                       <AiOutlineEdit />
                     </Link>
                     <Link to={`/books/delete/${book._id}`} className='btn btn-sm btn-danger'>
-  <MdOutlineDelete />
-</Link>
+                <MdOutlineDelete />
+                </Link> */}
 
                   </div>
                 </td>

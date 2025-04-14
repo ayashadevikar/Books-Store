@@ -30,9 +30,21 @@ const EditBook = () => {
   }, [id]);
 
   const handleEditBook = () => {
-    const updatedBook = { title, author, publishYear };
+    const updatedBook = {
+      title,
+      author,
+      publishYear: Number(publishYear),
+    };
+  
+    const token = localStorage.getItem('token'); // ✅ Get the JWT token
+  
     setLoading(true);
-    axios.put(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook)
+    axios
+      .put(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook, {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
+        },
+      })
       .then(() => {
         enqueueSnackbar('Book updated successfully!', { variant: 'success' });
         navigate('/');
@@ -43,7 +55,6 @@ const EditBook = () => {
         setLoading(false);
       });
   };
-  
 
   return (
     <div className="container mt-4">

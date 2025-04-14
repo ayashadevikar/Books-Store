@@ -20,6 +20,8 @@ const CreateBook = () => {
       return;
     }
   
+    const token = localStorage.getItem('token'); // Get token from localStorage
+  
     const data = {
       title,
       author,
@@ -28,7 +30,11 @@ const CreateBook = () => {
   
     setLoading(true);
     axios
-      .post(`${import.meta.env.VITE_API_URL}/books`, data)
+      .post(`${import.meta.env.VITE_API_URL}/books`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to headers
+        },
+      })
       .then(() => {
         enqueueSnackbar('Book created successfully!', { variant: 'success' });
         navigate('/');
@@ -41,7 +47,6 @@ const CreateBook = () => {
         setLoading(false);
       });
   };
-  
 
 
   return (

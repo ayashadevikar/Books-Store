@@ -14,6 +14,11 @@ const bookSchema = mongoose.Schema(
             type: Number,
             required: true,
         },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // Reference to the User model
+            required: true,
+        },
     },
     {
         timestamps: true,
