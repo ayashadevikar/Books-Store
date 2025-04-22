@@ -11,26 +11,30 @@ const DeleteBook = () => {
 
   const handleDeleteBook = () => {
     const token = localStorage.getItem('token'); // Get JWT from localStorage
-  
+    if (!token) {
+      enqueueSnackbar('No token found. Please log in again.', { variant: 'error' });
+      return;
+    }
+
     setLoading(true);
     axios
       .delete(`${import.meta.env.VITE_API_URL}/books/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`, // include token in header
+          Authorization: `Bearer ${token}`, // Include token in header
         },
       })
       .then(() => {
         setLoading(false);
         enqueueSnackbar('Book deleted successfully', { variant: 'success' });
-        navigate('/');
+        navigate('/'); // Navigate back to the homepage or another page
       })
       .catch((error) => {
         setLoading(false);
-        enqueueSnackbar('Error deleting book', { variant: 'error' });
+        const errorMessage = error.response?.data?.message || 'Error deleting book';
+        enqueueSnackbar(errorMessage, { variant: 'error' });
         console.error(error);
       });
   };
-  
 
   return (
     <div className="container mt-5">

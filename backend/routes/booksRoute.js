@@ -58,44 +58,55 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+
 // Route for Update a Book (Protected)
 router.put('/:id', authMiddleware, async (request, response) => {
     try {
+        // Validate required fields
         if (!request.body.title || !request.body.author || !request.body.publishYear) {
             return response.status(400).send({
                 message: 'Send all required fields: title, author, publishYear',
             });
         }
 
-        const { id } = request.params;
+        const { id } = req.params;
 
-        // Ensure the user is the one who created the book (if needed)
-        const book = await Book.findOne({ _id: id, user: request.user.id });
+        // Find the book by ID
+        const book = await Book.findById(id);
         if (!book) {
-            return response.status(404).json({ message: 'Book not found or not authorized to update' });
+            return response.status(404).json({ message: 'Book not found' });
         }
 
-        const result = await Book.findByIdAndUpdate(id, request.body, { new: true });
+        // Check if the book belongs to the authenticated user
+        if (book.user.toString() !== request.user.id) {
+            return response.status(403).json({ message: 'You are not authorized to edit this book' });
+        }
 
-        return response.status(200).send({ message: 'Book updated successfully', book: result });
+        
+
+        // Update the book
+        const updatedBook = await Book.findByIdAndUpdate(id, request.body, { new: true });
+
+        return response.status(200).send({ message: 'Book updated successfully', book: updatedBook });
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
     }
 });
 
+
+
 // Route for Delete a Book (Protected)
 router.delete('/:id', authMiddleware, async (request, response) => {
     try {
         const { id } = request.params;
 
-        // Ensure the user is the one who created the book (if needed)
         const book = await Book.findOne({ _id: id, user: request.user.id });
         if (!book) {
             return response.status(404).json({ message: 'Book not found or not authorized to delete' });
         }
 
-        const result = await Book.findByIdAndDelete(id);
+        await Book.findByIdAndDelete(id);
 
         return response.status(200).send({ message: 'Book deleted successfully' });
     } catch (error) {
@@ -103,5 +114,6 @@ router.delete('/:id', authMiddleware, async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 });
+
 
 export default router;

@@ -30,28 +30,41 @@ const EditBook = () => {
   }, [id]);
 
   const handleEditBook = () => {
+    if (!title || !author || !publishYear) {
+      enqueueSnackbar('All fields are required!', { variant: 'warning' });
+      return;
+    }
+
     const updatedBook = {
       title,
       author,
-      publishYear: Number(publishYear),
+      publishYear: parseInt(publishYear, 10),
     };
-  
-    const token = localStorage.getItem('token'); // ✅ Get the JWT token
-  
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      enqueueSnackbar('Please log in to edit the book', { variant: 'warning' });
+      navigate('/login');
+      return;
+    }
+    console.log('Sending PUT request to: ', `${import.meta.env.VITE_API_URL}/books/${id}`);
+    console.log('Updated book data: ', updatedBook);
     setLoading(true);
-    axios
-      .put(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook, {
-        headers: {
-          Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
-        },
+    axios.put(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook, {
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         enqueueSnackbar('Book updated successfully!', { variant: 'success' });
+        setLoading(false);
+        setTitle('');  // Reset form fields after successful update
+        setAuthor('');
+        setPublishYear('');
         navigate('/');
       })
       .catch((err) => {
         console.log(err);
-        enqueueSnackbar('Failed to update book', { variant: 'error' });
+        const errorMessage = err.response?.data?.message || 'Failed to update book';
+        enqueueSnackbar(errorMessage, { variant: 'error' });
         setLoading(false);
       });
   };
@@ -64,17 +77,33 @@ const EditBook = () => {
         <div className="card p-4 shadow-sm mt-3">
           <div className="mb-3">
             <label className="form-label">Title</label>
-            <input className="form-control" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <input
+              className="form-control"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              disabled={loading}
+            />
           </div>
           <div className="mb-3">
             <label className="form-label">Author</label>
-            <input className="form-control" value={author} onChange={(e) => setAuthor(e.target.value)} />
+            <input
+              className="form-control"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              disabled={loading}
+            />
           </div>
           <div className="mb-3">
             <label className="form-label">Publish Year</label>
-            <input type="number" className="form-control" value={publishYear} onChange={(e) => setPublishYear(e.target.value)} />
+            <input
+              type="number"
+              className="form-control"
+              value={publishYear}
+              onChange={(e) => setPublishYear(e.target.value)}
+              disabled={loading}
+            />
           </div>
-          <button className="btn btn-success" onClick={handleEditBook}>Save</button>
+          <button className="btn btn-success" onClick={handleEditBook} disabled={loading}>Save</button>
         </div>
       )}
     </div>
@@ -82,3 +111,4 @@ const EditBook = () => {
 };
 
 export default EditBook;
+
