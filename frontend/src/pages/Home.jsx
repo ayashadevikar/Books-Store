@@ -16,7 +16,7 @@ const Home = () => {
         .then((res) => {
           console.log('Fetched books:', res.data);
            if (res.data.success && Array.isArray(res.data.data))  {
-            setBooks(res.data);
+            setBooks(res.data.data);
           } else {
             console.error('API did not return an array:', res.data);
             setBooks([]);
@@ -67,29 +67,28 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(books) && books?.map((book, index) => (
-              <tr key={book._id}>
-                <td>{index + 1}</td>
-                <td>{book.title}</td>
-                <td>{book.author}</td>
-                <td>{book.publishYear}</td>
-                <td>
-                  <div className='d-flex gap-2'>
-                    <Link to={`/books/details/${book._id}`} className='btn btn-sm btn-info text-white'>
-                      <BsInfoCircle />
-                    </Link>
-                    {/* <Link to={`/books/edit/${book._id}`} className='btn btn-sm btn-warning'>
-                      <AiOutlineEdit />
-                    </Link>
-                    <Link to={`/books/delete/${book._id}`} className='btn btn-sm btn-danger'>
-                <MdOutlineDelete />
-                </Link> */}
-
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {Array.isArray(books) && books.length > 0 ? (
+    books.map((book, index) => (
+      <tr key={book._id}>
+        <td>{index + 1}</td>
+        <td>{book.title}</td>
+        <td>{book.author}</td>
+        <td>{book.publishYear}</td>
+        <td>
+          <div className='d-flex gap-2'>
+            <Link to={`/books/details/${book._id}`} className='btn btn-sm btn-info text-white'>
+              <BsInfoCircle />
+            </Link>
+          </div>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="5" className="text-center">No books found.</td>
+    </tr>
+  )}
+</tbody>
         </table>
             )}
     </>
