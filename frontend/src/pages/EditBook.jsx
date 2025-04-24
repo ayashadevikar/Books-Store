@@ -25,7 +25,7 @@ const EditBook = () => {
     setLoading(true);
     
     // Fetch book data by ID
-    axios.get(`http://localhost:5555/books/${id}`, {
+    axios.get(`${import.meta.env.VITE_API_URL}/books/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -66,7 +66,7 @@ const EditBook = () => {
 
     // Update book data
     axios
-      .put(`http://localhost:5555/books/${id}`, updatedBook, {
+      .put(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook, {
         headers: {
           Authorization: `Bearer ${token}`, // Include token in header
         },
