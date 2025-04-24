@@ -12,67 +12,92 @@ const EditBook = () => {
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
+  // Get token from localStorage
+  const token = localStorage.getItem('token');
+  
   useEffect(() => {
-    setLoading(true);
-    axios.get(`${import.meta.env.VITE_API_URL}/books/${id}`)
-      .then((res) => {
-        const { title, author, publishYear } = res.data;
-        setTitle(title);
-        setAuthor(author);
-        setPublishYear(publishYear);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-        enqueueSnackbar('Failed to load book data', { variant: 'error' });
-      });
-  }, [id]);
-
-  const handleEditBook = () => {
-    if (!title || !author || !publishYear) {
-      enqueueSnackbar('All fields are required!', { variant: 'warning' });
-      return;
-    }
-
-    const updatedBook = {
-      title,
-      author,
-      publishYear: parseInt(publishYear, 10),
-    };
-
-    const token = localStorage.getItem('token');
     if (!token) {
-      enqueueSnackbar('Please log in to edit the book', { variant: 'warning' });
+      enqueueSnackbar('Unauthorized: Please log in', { variant: 'error' });
       navigate('/login');
       return;
     }
-    console.log('Sending PUT request to: ', `${import.meta.env.VITE_API_URL}/books/${id}`);
-    console.log('Updated book data: ', updatedBook);
+
     setLoading(true);
-    axios.put(`${import.meta.env.VITE_API_URL}/books/${id}`, updatedBook, {
-        headers: { Authorization: `Bearer ${token}` },
+    
+    // Fetch book data by ID
+    axios.get(`http://localhost:5555/books/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      console.log('API Response:', res.data);  // Log the response here for debugging
+      const { title, author, publishYear } = res.data;
+      setTitle(title || '');
+      setAuthor(author || '');
+      setPublishYear(publishYear || '');
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error('Error fetching book data:', err);
+      enqueueSnackbar('Failed to load book data', { variant: 'error' });
+      setLoading(false);
+    });
+  }, [id, token, navigate, enqueueSnackbar]);
+  console.log('Title:', title, 'Author:', author, 'Publish Year:', publishYear);
+
+  const handleEditBook = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    if (!title || !author || !publishYear) {
+      enqueueSnackbar('All fields are required', { variant: 'error' });
+      return;
+    }
+
+    // Ensure publishYear is a valid number
+    if (isNaN(publishYear) || publishYear < 1000 || publishYear > new Date().getFullYear()) {
+      enqueueSnackbar('Invalid publish year', { variant: 'error' });
+      return;
+    }
+
+    const updatedBook = { title, author, publishYear: Number(publishYear) };
+
+    setLoading(true);
+
+    // Update book data
+    axios
+      .put(`http://localhost:5555/books/${id}`, updatedBook, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token in header
+        },
       })
-      .then(() => {
+      .then((res) => {
         enqueueSnackbar('Book updated successfully!', { variant: 'success' });
-        setLoading(false);
-        setTitle('');  // Reset form fields after successful update
-        setAuthor('');
-        setPublishYear('');
-        navigate('/');
+        navigate('/'); // Navigate back to the homepage or another page
       })
       .catch((err) => {
-        console.log(err);
-        const errorMessage = err.response?.data?.message || 'Failed to update book';
-        enqueueSnackbar(errorMessage, { variant: 'error' });
         setLoading(false);
+        if (err.response) {
+          console.error('Error response:', err.response.data);
+          enqueueSnackbar(`Error: ${err.response.data.message || 'Failed to update book'}`, { variant: 'error' });
+        } else {
+          console.error('Error:', err.message);
+          enqueueSnackbar('Failed to update book', { variant: 'error' });
+        }
       });
   };
+
+  // Log state before rendering the form for debugging purposes
+  console.log('Form State:', { title, author, publishYear });
 
   return (
     <div className="container mt-4">
       <h2>Edit Book</h2>
-      {loading && <div className="spinner-border text-primary" role="status"><span className="visually-hidden">Loading...</span></div>}
+      {loading && (
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      )}
       {!loading && (
         <div className="card p-4 shadow-sm mt-3">
           <div className="mb-3">
@@ -81,7 +106,7 @@ const EditBook = () => {
               className="form-control"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              disabled={loading}
+              placeholder="Enter book title"
             />
           </div>
           <div className="mb-3">
@@ -90,7 +115,7 @@ const EditBook = () => {
               className="form-control"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
-              disabled={loading}
+              placeholder="Enter author name"
             />
           </div>
           <div className="mb-3">
@@ -100,10 +125,12 @@ const EditBook = () => {
               className="form-control"
               value={publishYear}
               onChange={(e) => setPublishYear(e.target.value)}
-              disabled={loading}
+              placeholder="Enter publish year"
             />
           </div>
-          <button className="btn btn-success" onClick={handleEditBook} disabled={loading}>Save</button>
+          <button className="btn btn-success" onClick={handleEditBook}>
+            Save
+          </button>
         </div>
       )}
     </div>
@@ -111,4 +138,3 @@ const EditBook = () => {
 };
 
 export default EditBook;
-

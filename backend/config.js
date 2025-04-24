@@ -6,4 +6,4 @@ export const mongoDBURL =
 
 
 
- export const JWT_SECRET='dfghjetrhjkhliyuhjklsdfghjk'
+ export const JWT_SECRET= 'dfghjetrhjkhliyuhjklsdfghjk'

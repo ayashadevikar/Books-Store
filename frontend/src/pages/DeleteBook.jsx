@@ -13,6 +13,7 @@ const DeleteBook = () => {
     const token = localStorage.getItem('token'); // Get JWT from localStorage
     if (!token) {
       enqueueSnackbar('No token found. Please log in again.', { variant: 'error' });
+      navigate('/login');
       return;
     }
 
@@ -30,8 +31,17 @@ const DeleteBook = () => {
       })
       .catch((error) => {
         setLoading(false);
-        const errorMessage = error.response?.data?.message || 'Error deleting book';
-        enqueueSnackbar(errorMessage, { variant: 'error' });
+        // Handle possible error messages gracefully
+        const errorMessage =
+          error.response?.data?.message ||
+          'Error deleting book. Please try again later.';
+        if (error.response?.status === 401) {
+          // If unauthorized, redirect to login
+          enqueueSnackbar('Unauthorized. Please log in again.', { variant: 'error' });
+          navigate('/login');
+        } else {
+          enqueueSnackbar(errorMessage, { variant: 'error' });
+        }
         console.error(error);
       });
   };

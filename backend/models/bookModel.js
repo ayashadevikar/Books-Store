@@ -5,14 +5,18 @@ const bookSchema = mongoose.Schema(
         title:{
             type: String,
             required: true,
+            trim: true,
         },
         author: {
             type: String,
             required: true,
+            trim: true,
         },
         publishYear: {
             type: Number,
             required: true,
+            min: 0, // No negative years
+            max: new Date().getFullYear(), // Not beyond the current year
         },
         user: {
             type: mongoose.Schema.Types.ObjectId,
