@@ -14,11 +14,17 @@ const Home = () => {
       axios.get(`${import.meta.env.VITE_API_URL}/books`)
         .then((res) => {
           console.log('Fetched books:', res.data);
-          setBooks(res.data); // <-- Use res.data directly
+          if (Array.isArray(res.data)) {
+            setBooks(res.data);
+          } else {
+            console.error('API did not return an array:', res.data);
+            setBooks([]);
+          }
           setLoading(false);
         })
         .catch((err) => {
           console.error(err);
+          setBooks([]);
           setLoading(false);
         });
     }, []);
