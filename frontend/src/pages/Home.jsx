@@ -9,12 +9,13 @@ import { BsInfoCircle } from 'react-icons/bs';
 const Home = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
       setLoading(true);
       axios.get(`${import.meta.env.VITE_API_URL}/books`)
         .then((res) => {
           console.log('Fetched books:', res.data);
-          if (Array.isArray(res.data)) {
+           if (res.data.success && Array.isArray(res.data.data))  {
             setBooks(res.data);
           } else {
             console.error('API did not return an array:', res.data);
@@ -66,7 +67,7 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {books?.map((book, index) => (
+            {Array.isArray(books) && books?.map((book, index) => (
               <tr key={book._id}>
                 <td>{index + 1}</td>
                 <td>{book.title}</td>
