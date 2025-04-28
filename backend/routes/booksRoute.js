@@ -1,5 +1,5 @@
 import express from 'express';
-import { Book } from '../models/bookModel.js';
+import  { Book } from '../models/bookModel.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
