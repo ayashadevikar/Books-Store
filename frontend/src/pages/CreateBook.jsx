@@ -37,7 +37,7 @@ const CreateBook = () => {
       })
       .then(() => {
         enqueueSnackbar('Book created successfully!', { variant: 'success' });
-        navigate('/');
+       
       })
       .catch((err) => {
         enqueueSnackbar('Something went wrong.', { variant: 'error' });

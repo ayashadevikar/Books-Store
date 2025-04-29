@@ -93,7 +93,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     console.log('Request user:', req.user); // Log user information
 
     // Ensure the user is authenticated
-    if (!req.user || !req.user._id) {
+    if (!req.user || !req.user.id) {
       return res.status(401).json({ message: "Unauthorized: User not authenticated" });
     }
 
@@ -104,7 +104,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     }
 
     // Check if the user owns the book before updating
-    if (book.user.toString() !== req.user._id.toString()) {
+    if (book.user.toString() !== req.user.id.toString()) {
       return res.status(403).json({ message: "Forbidden: You can't edit this book" });
     }
 
