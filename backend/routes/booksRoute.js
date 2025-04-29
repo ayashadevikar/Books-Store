@@ -140,9 +140,10 @@ router.delete('/:id', authMiddleware, async (req, res) => {
       return res.status(403).json({ message: "Forbidden: You can't delete this book" });
     }
 
-    await book.remove();
+    await Book.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Book deleted successfully" });
   } catch (error) {
+ 
     res.status(500).json({ message: error.message });
   }
 });
