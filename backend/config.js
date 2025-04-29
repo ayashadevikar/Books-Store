@@ -1,9 +1,7 @@
-export const PORT = 5555;
-
-export const mongoDBURL = 
-
- 'mongodb+srv://ayashadevikar8:nHCsbyKIajFoVj06@cluster0.txuv13l.mongodb.net/books-collection?retryWrites=true&w=majority&appName=Cluster0';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
-
- export const JWT_SECRET= 'dfghjetrhjkhliyuhjklsdfghjk'
+  export const mongoDBURL = process.env.MONGODB_URL;
+  export const JWT_SECRET = process.env.JWT_SECRET;
+  export const PORT = process.env.PORT || 5000;
