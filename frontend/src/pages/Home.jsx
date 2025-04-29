@@ -4,11 +4,15 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 // import { AiOutlineEdit } from 'react-icons/ai';
 import { BsInfoCircle } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 // import { MdOutlineAddBox , MdOutlineDelete } from 'react-icons/md';
 
 const Home = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+  
 
     useEffect(() => {
       setLoading(true);
@@ -30,14 +34,17 @@ const Home = () => {
         });
     }, []);
     
+    const handleAddBookClick = () => {
+      navigate('/booklist');
+    };
     
   return (
     <>
 
   
 <div className='d-flex justify-content-between align-items-center mb-3 p-2'>
-        <h1>Book List</h1>
-       
+        <h3>Book List</h3>
+        <button className="btn btn-primary" onClick={handleAddBookClick}>CRUD Page</button>
         {/* <div className='d-flex gap-3'>
             <Link to='/books/create' className='btn btn-primary d-flex align-items-center'>
               <MdOutlineAddBox className='me-2' />
@@ -58,7 +65,7 @@ const Home = () => {
       ) : (
         <table className='table table-striped table-bordered'>
           <thead className='table-dark'>
-            <tr>
+            <tr className='text-center'>
               <th>No.</th>
               <th>Title</th>
               <th>Author</th>
@@ -69,13 +76,13 @@ const Home = () => {
           <tbody>
   {Array.isArray(books) && books.length > 0 ? (
     books.map((book, index) => (
-      <tr key={book._id}>
+      <tr className='text-center' key={book._id}>
         <td>{index + 1}</td>
         <td>{book.title}</td>
         <td>{book.author}</td>
         <td>{book.publishYear}</td>
         <td>
-          <div className='d-flex gap-2'>
+          <div className='text-center'>
             <Link to={`/books/details/${book._id}`} className='btn btn-sm btn-info text-white'>
               <BsInfoCircle />
             </Link>

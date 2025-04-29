@@ -10,6 +10,7 @@ import Register from './pages/Register.jsx'
 import Navbar from './pages/Navbar.jsx'
 import BookList from './pages/BookList.jsx'
 
+
 function App() {
   
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -29,7 +30,10 @@ function App() {
           <Route path='/books/details/:id' element={<ShowBook /> } />
           <Route path='/books/edit/:id' element={<EditBook /> } />
           <Route path='/books/delete/:id' element={<DeleteBook /> } />
+  
     </Routes>
+
+
     </>
   )
 }

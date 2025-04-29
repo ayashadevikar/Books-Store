@@ -14,6 +14,7 @@ const CreateBook = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
+ 
   const handleSaveBook = () => {
     if (!title || !author || !publishYear) {
       enqueueSnackbar('Please fill all fields', { variant: 'warning' });
@@ -37,7 +38,7 @@ const CreateBook = () => {
       })
       .then(() => {
         enqueueSnackbar('Book created successfully!', { variant: 'success' });
-       
+        navigate('/');    
       })
       .catch((err) => {
         enqueueSnackbar('Something went wrong.', { variant: 'error' });

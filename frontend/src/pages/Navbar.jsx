@@ -14,7 +14,7 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
-        <a className="navbar-brand" href="/">Book App</a> 
+         <h1><a className="navbar-brand" href="/">Book App</a></h1> 
         <Link to='/login' type="button" className="btn btn-primary px-4">Login</Link>
         <Link to='/register' type="button" className="btn btn-primary px-4">Register</Link>
        

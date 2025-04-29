@@ -73,7 +73,7 @@ const EditBook = () => {
       })
       .then((res) => {
         enqueueSnackbar('Book updated successfully!', { variant: 'success' });
-        navigate('/booklist'); // Navigate back to the homepage or another page
+        navigate('/'); // Navigate back to the homepage or another page
       })
       .catch((err) => {
         setLoading(false);
